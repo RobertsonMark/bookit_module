@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/reserve', function(req, res, next) {
-  console.log("not gay");
+  console.log("test");
   //logic connecting to db
   res.send('/');
 });
