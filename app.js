@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
+var dateFormat = require('dateformat');
+var moment = require('moment');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -15,7 +17,8 @@ var RoomSchema = new Schema({
     name: {type: String},
     isReserved: {type: Number},
     room: {type: Number},
-    //timeRemaining: {type: Date, default: Date.now}
+    time : { type : Date, default: Date.now },
+    timeDone: {type: String}
 });
 
 var Room = mongoose.model('Room', RoomSchema);
@@ -34,7 +37,7 @@ mongoose.connect('mongodb://admin:admin1234@ds113815.mlab.com:13815/bookit', {us
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  console.log("test we good xdxd okay sign");
+  console.log("server is connected to mongo");
 });
 
 app.get('/', function(req, res, next) {
@@ -47,11 +50,32 @@ app.get('/', function(req, res, next) {
           console.log(err)
       } else {
           //if (Date.now == timeRemaining)
-          res.render('index', { isReserved: doc.isReserved, name: doc.name });
+          res.render('index', { isReserved: doc.isReserved, timeOut: doc.timeDone});
       }
   })
 });
 
+
+app.get('/admin-reset', function(req, res) {
+  //logic saving to db - say the room is now reserved
+  //go to new view
+  Room.findOne({room: 201}, function (err, doc) {
+      if (err) {
+          console.log(err)
+      } else {
+          var date = new Date();
+          var hours = Number(dateFormat(date, "H")) + 1;
+          var minutes = dateFormat(date, "MM");
+          var formattedTimeOut = (hours + ":" + minutes + ":" + "00").toString();
+          console.log(formattedTimeOut);
+          doc.timeDone = formattedTimeOut;
+          doc.isReserved = 0;
+          doc.name = "Nobody";
+          doc.save();
+      }
+  })
+  res.redirect('/');
+});
 
 // Will create the default database object
 app.post('/admin-create', function(req, res) {
@@ -72,9 +96,14 @@ app.post('/reserve', function(req, res) {
       if (err) {
           console.log(err)
       } else {
+          var date = new Date();
+          var hours = Number(dateFormat(date, "H")) + 1;
+          var minutes = dateFormat(date, "MM");
+          var formattedTimeOut = (hours + ":" + minutes + ":" + "00").toString();
+          console.log(formattedTimeOut);
+          doc.timeDone = formattedTimeOut;
           doc.isReserved = 1;
           doc.name = "You";
-          //doc.timeRemaining = Date.now + 30mins;
           doc.save();
       }
   })
