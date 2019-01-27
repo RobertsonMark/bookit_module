@@ -14,11 +14,11 @@ var app = express();
 var RoomSchema = new Schema({
     name: {type: String},
     isReserved: {type: Number},
-    room: {type: Number}
+    room: {type: Number},
+    //timeRemaining: {type: Date, default: Date.now}
 });
 
 var Room = mongoose.model('Room', RoomSchema);
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,15 +37,16 @@ db.once('open', function() {
   console.log("test we good xdxd okay sign");
 });
 
-
 app.get('/', function(req, res, next) {
   // Read from database
   // if open, send flag saying its open
-  // else send flase that its reserved
+  // else send flag that its reserved
+
   Room.findOne({room: 201}, function (err, doc) {
       if (err) {
           console.log(err)
       } else {
+          //if (Date.now == timeRemaining)
           res.render('index', { isReserved: doc.isReserved, name: doc.name });
       }
   })
@@ -73,6 +74,7 @@ app.post('/reserve', function(req, res) {
       } else {
           doc.isReserved = 1;
           doc.name = "You";
+          //doc.timeRemaining = Date.now + 30mins;
           doc.save();
       }
   })
