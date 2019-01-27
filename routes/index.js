@@ -3,13 +3,17 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  // Read from database
+  // if open, send flag saying its open
+  // else send flase that its reserved
+  res.render('index', { title: 'bookit' });
 });
 
-router.post('/reserve', function(req, res, next) {
-  console.log("test");
-  //logic connecting to db
-  res.send('/');
+router.post('/reserve', function(req, res) {
+  //logic saving to db - say the room is now reserved
+  res.send('room reserved');
 });
+
+
 
 module.exports = router;
