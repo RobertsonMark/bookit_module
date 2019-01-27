@@ -1,8 +1,48 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<h1 align="center">Welcome to Bookit System</h1>
 
-<form action="/reserve" method="post">
-    <label for="team_name">Enter name: </label>
-    <input id="team_name" type="text" name="name_field" value="Default name for team.">
-    <input type="submit" value="Reserve">
+<style>
+.text{
+ position: absolute;
+ top: 50%;
+ right: 50%;
+}
+.button {
+ background-color: #4CAF50; /* Green */
+ border: none;
+ color: white;
+ padding: 15px 32px;
+ text-align: center;
+ text-decoration: none;
+ display: inline-block;
+ font-size: 24px;
+ margin: 4px 2px;
+ cursor: pointer;
+
+
+}
+</style>
+
+{{#if isReserved}}
+
+<!--  Time section  -->
+<section id="app" class="hero is-info is-fullheight is-bold">
+<div class="hero-body">
+<div class="container has-text-centered">
+
+<h2 align="center" class="title is-6">Reserved by {{name}}</h2>
+
+
+{{else}}
+
+<form align="center" action="/reserve" method="post">
+    <button
+         id="start" class="button is-dark is-large">
+       <i class="far fa-play-circle">Reserve</i>
+    </button>
 </form>
+
+</div>
+</div>
+</div>
+</section>
+{{/if}}
